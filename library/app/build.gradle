@@ -1,5 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'maven-publish'
+
+version '0.1'
+group 'de.goddchen.android'
 
 android {
     compileSdkVersion 25
@@ -20,4 +24,16 @@ dependencies {
     compile 'com.google.firebase:firebase-database:10.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+}
+
+android.libraryVariants
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
+            artifactId = 'rxfiredroid'
+            groupId = 'de.goddchen.android'
+            version = '0.1'
+        }
+    }
 }
