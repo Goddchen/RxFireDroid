@@ -2,9 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'maven-publish'
 
-version '0.1'
-group 'de.goddchen.android'
-
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
@@ -34,6 +31,15 @@ publishing {
             artifactId = 'rxfiredroid'
             groupId = 'de.goddchen.android'
             version = '0.1'
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.compile.allDependencies.each { dependency ->
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', dependency.group)
+                    dependencyNode.appendNode('artifactId', dependency.name)
+                    dependencyNode.appendNode('version', dependency.version)
+                }
+            }
         }
     }
 }
