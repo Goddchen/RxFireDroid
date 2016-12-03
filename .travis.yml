@@ -28,7 +28,7 @@ android:
 script:
     - cd library
     - chmod u+x ./gradlew
-    - ./gradlew clean assembleDebug publishToMavenLocal
+    - ./gradlew clean assemble publishToMavenLocal
     - cd ../sample
     - chmod u+x ./gradlew
     - ./gradlew clean assembleDebug
