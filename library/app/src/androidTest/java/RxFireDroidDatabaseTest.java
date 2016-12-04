@@ -5,6 +5,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.goddchen.android.rxfiredroid.database.RxFireDroidDatabase;
+
 /**
  * Created by goddc on 04.12.2016.
  */
@@ -15,5 +17,15 @@ public class RxFireDroidDatabaseTest {
     @Test
     public void test() {
         Assert.assertEquals(true, true);
+    }
+
+    @Test
+    public void setReadDeleteTest() {
+        RxFireDroidDatabase.setValue("test-value", true)
+                .blockingAwait();
+        Assert.assertTrue(RxFireDroidDatabase.getValues("test-value").blockingGet()
+                .getValue(Boolean.class));
+        RxFireDroidDatabase.deleteValues("test-value").blockingAwait();
+        Assert.assertFalse(RxFireDroidDatabase.getValues("test-value").blockingGet().exists());
     }
 }
