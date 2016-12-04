@@ -37,4 +37,4 @@ script:
     - ./gradlew clean assemble publishToMavenLocal
     - cd ../sample
     - chmod u+x ./gradlew
-    - ./gradlew clean assembleDebug
+    - ./gradlew clean assembleDebug connectedAndroidTest
