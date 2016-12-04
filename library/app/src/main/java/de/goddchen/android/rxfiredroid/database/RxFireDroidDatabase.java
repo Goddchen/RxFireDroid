@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,14 +41,22 @@ public class RxFireDroidDatabase {
                                 String.format(Locale.US, pathFormat, (Object[]) args)));
     }
 
-    public static Single<String> escapeKey(String key) {
-        return Single.just(key
-                .replaceAll("\\.", ",")
-                .replaceAll("\\+", ","));
+    public static Maybe<String> escapeKey(String key) {
+        if (key == null) {
+            return Maybe.empty();
+        } else {
+            return Maybe.just(key
+                    .replaceAll("\\.", ",")
+                    .replaceAll("\\+", ","));
+        }
     }
 
-    public static Single<String> toLowerCase(String key) {
-        return Single.just(key.toLowerCase(Locale.US));
+    public static Maybe<String> toLowerCase(String key) {
+        if (key == null) {
+            return Maybe.empty();
+        } else {
+            return Maybe.just(key.toLowerCase(Locale.US));
+        }
     }
 
     public static Single<DataSnapshot> getValues(String ref) {
