@@ -35,7 +35,7 @@ before_script:
 script:
     - cd library
     - chmod u+x ./gradlew
-    - ./gradlew clean assemble publishToMavenLocal
+    - ./gradlew clean assemble test publishToMavenLocal
     - cd ../sample
     - chmod u+x ./gradlew
     - ./gradlew clean assembleDebug connectedAndroidTest
