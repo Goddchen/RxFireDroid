@@ -15,11 +15,6 @@ import de.goddchen.android.rxfiredroid.database.RxFireDroidDatabase;
 public class RxFireDroidDatabaseTest {
 
     @Test
-    public void test() {
-        Assert.assertEquals(true, true);
-    }
-
-    @Test
     public void setReadDeleteTest() {
         RxFireDroidDatabase.setValue("test-value", true)
                 .blockingAwait();
