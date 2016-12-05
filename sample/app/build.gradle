@@ -35,9 +35,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.1'
     testCompile 'junit:junit:4.12'
-    compile('de.goddchen.android:rxfiredroid:0.1') {
-        transitive = true
-    }
+    compile('de.goddchen.android:rxfiredroid:0.1')
 }
 
 apply plugin: 'com.google.gms.google-services'
