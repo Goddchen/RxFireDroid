@@ -15,11 +15,17 @@ import de.goddchen.android.rxfiredroid.database.RxFireDroidDatabase;
 public class RxFireDroidDatabaseTest {
 
     @Test
-    public void setReadDeleteTest() {
+    public void setReadTest() {
         RxFireDroidDatabase.setValue("test-value", true)
                 .blockingAwait();
         Assert.assertTrue(RxFireDroidDatabase.getValues("test-value").blockingGet()
                 .getValue(Boolean.class));
+    }
+
+    @Test
+    public void setDeleteTest() {
+        RxFireDroidDatabase.setValue("test-value", true)
+                .blockingAwait();
         RxFireDroidDatabase.deleteValues("test-value").blockingAwait();
         Assert.assertFalse(RxFireDroidDatabase.getValues("test-value").blockingGet().exists());
     }
