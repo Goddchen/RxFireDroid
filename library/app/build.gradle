@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 25
@@ -42,6 +43,30 @@ publishing {
                     dependencyNode.appendNode('version', dependency.version)
                 }
             }
+        }
+    }
+}
+
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_KEY")
+
+    publications = ['maven']
+
+    dryRun = false
+    publish = false
+    override = true
+
+    pkg {
+        repo = 'RxFireDroid'
+        name = 'RxFireDroid'
+        userOrg = 'goddchen2'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/Goddchen/RxFireDroid.git'
+        websiteUrl = 'https://github.com/Goddchen/RxFireDroid'
+
+        version {
+            name = '0.1'
         }
     }
 }
