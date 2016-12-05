@@ -34,7 +34,7 @@ script:
     - ./gradlew clean assembleDebug
 
 after_success:
-    - if [ "$TRAVIS_BRANCH" == "jcenter" ]; then
+    - if [ "$TRAVIS_BRANCH" == "release" ]; then
       cd ../library;
       ./gradlew bintrayUpload;
       fi
