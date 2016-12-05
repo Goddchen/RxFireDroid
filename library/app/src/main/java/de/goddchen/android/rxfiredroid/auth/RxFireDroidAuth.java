@@ -22,8 +22,13 @@ public class RxFireDroidAuth {
     public static Single<FirebaseUser> signIn(String email, String password) {
         return Single.<FirebaseUser>create(emitter ->
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(task -> emitter.onSuccess(task.getResult().getUser()))
-                        .addOnFailureListener(emitter::onError))
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                emitter.onError(task.getException());
+                            } else {
+                                emitter.onSuccess(task.getResult().getUser());
+                            }
+                        }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -31,8 +36,13 @@ public class RxFireDroidAuth {
     public static Single<FirebaseUser> signIn() {
         return Single.<FirebaseUser>create(emitter ->
                 FirebaseAuth.getInstance().signInAnonymously()
-                        .addOnCompleteListener(task -> emitter.onSuccess(task.getResult().getUser()))
-                        .addOnFailureListener(emitter::onError))
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                emitter.onError(task.getException());
+                            } else {
+                                emitter.onSuccess(task.getResult().getUser());
+                            }
+                        }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -40,8 +50,13 @@ public class RxFireDroidAuth {
     public static Single<FirebaseUser> signIn(AuthCredential authCredential) {
         return Single.<FirebaseUser>create(emitter ->
                 FirebaseAuth.getInstance().signInWithCredential(authCredential)
-                        .addOnCompleteListener(task -> emitter.onSuccess(task.getResult().getUser()))
-                        .addOnFailureListener(emitter::onError))
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                emitter.onError(task.getException());
+                            } else {
+                                emitter.onSuccess(task.getResult().getUser());
+                            }
+                        }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -49,8 +64,13 @@ public class RxFireDroidAuth {
     public static Single<FirebaseUser> signIn(String customToken) {
         return Single.<FirebaseUser>create(emitter ->
                 FirebaseAuth.getInstance().signInWithCustomToken(customToken)
-                        .addOnCompleteListener(task -> emitter.onSuccess(task.getResult().getUser()))
-                        .addOnFailureListener(emitter::onError))
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                emitter.onError(task.getException());
+                            } else {
+                                emitter.onSuccess(task.getResult().getUser());
+                            }
+                        }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -70,8 +90,13 @@ public class RxFireDroidAuth {
     public static Single<FirebaseUser> createUser(String email, String password) {
         return Single.<FirebaseUser>create(emitter ->
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(task -> emitter.onSuccess(task.getResult().getUser()))
-                        .addOnFailureListener(emitter::onError))
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                emitter.onError(task.getException());
+                            } else {
+                                emitter.onSuccess(task.getResult().getUser());
+                            }
+                        }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -79,8 +104,13 @@ public class RxFireDroidAuth {
     public static Completable confirmPasswordReset(String code, String newPassword) {
         return Completable.create(emitter ->
                 FirebaseAuth.getInstance().confirmPasswordReset(code, newPassword)
-                        .addOnCompleteListener(task -> emitter.onComplete())
-                        .addOnFailureListener(emitter::onError))
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                emitter.onComplete();
+                            } else {
+                                emitter.onError(task.getException());
+                            }
+                        }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -88,8 +118,13 @@ public class RxFireDroidAuth {
     public static Completable sendPasswordResetEmail(String email) {
         return Completable.create(emitter ->
                 FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-                        .addOnCompleteListener(task -> emitter.onComplete())
-                        .addOnFailureListener(emitter::onError))
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                emitter.onComplete();
+                            } else {
+                                emitter.onError(task.getException());
+                            }
+                        }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -97,8 +132,13 @@ public class RxFireDroidAuth {
     public static Single<String> verifyPasswordResetCode(String code) {
         return Single.<String>create(emitter ->
                 FirebaseAuth.getInstance().verifyPasswordResetCode(code)
-                        .addOnCompleteListener(task -> emitter.onSuccess(task.getResult()))
-                        .addOnFailureListener(emitter::onError))
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                emitter.onSuccess(task.getResult());
+                            } else {
+                                emitter.onError(task.getException());
+                            }
+                        }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -110,6 +150,20 @@ public class RxFireDroidAuth {
             emitter.setDisposable(Disposables.fromAction(() ->
                     FirebaseAuth.getInstance().removeAuthStateListener(authStateListener)));
         })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static Completable deleteUser(FirebaseUser user) {
+        return Completable.create(emitter -> user.delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        emitter.onComplete();
+                    } else {
+                        emitter.onError(task
+                                .getException());
+                    }
+                }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
