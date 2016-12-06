@@ -1,3 +1,5 @@
+package de.goddchen.android.rxfiredroid.tests;
+
 import android.support.test.runner.AndroidJUnit4;
 
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
