@@ -1,3 +1,5 @@
+package de.goddchen.android.rxfiredroid.tests;
+
 import junit.framework.Assert;
 
 import org.junit.Test;

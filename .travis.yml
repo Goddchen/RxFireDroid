@@ -25,6 +25,7 @@ android:
     # if you need to run emulator(s) during your tests
     - sys-img-armeabi-v7a-android-22
     # - sys-img-x86-android-17
+    #- sys-img-armeabi-v7a-google_apis-24
 
 before_script:
     - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
@@ -35,13 +36,10 @@ before_script:
 script:
     - cd library
     - chmod u+x ./gradlew
-    - ./gradlew clean assemble test publishToMavenLocal
-    - cd ../sample
-    - chmod u+x ./gradlew
-    - ./gradlew clean assembleDebug connectedAndroidTest
+    - ./gradlew clean assemble test connectedAndroidTest
 
 after_success:
     - if [ "$TRAVIS_BRANCH" == "release" ]; then
-      cd ../library;
+      cd "$TRAVIS_BUILD_DIR"/library;
       ./gradlew bintrayUpload;
       fi
