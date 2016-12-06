@@ -35,7 +35,7 @@ before_script:
 script:
     - cd library
     - chmod u+x ./gradlew
-    - ./gradlew clean assemble test connectedAndroidTest
+    - travis_wait 30 ./gradlew clean assemble test connectedAndroidTest
 
 after_success:
     - if [ "$TRAVIS_BRANCH" == "release" ]; then
