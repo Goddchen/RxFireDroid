@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 25
@@ -10,6 +11,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -22,7 +24,6 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    testCompile 'junit:junit:4.12'
 }
 
 android.libraryVariants
@@ -30,6 +31,8 @@ publishing {
     publications {
         maven(MavenPublication) {
             artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
+            artifact androidJavadocsJar
+            artifact androidSourcesJar
             artifactId = 'rxfiredroid'
             groupId = 'de.goddchen.android'
             version = '0.1'
@@ -46,4 +49,51 @@ publishing {
     }
 }
 
-apply plugin: 'com.google.gms.google-services'
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocsJar
+}
+
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_KEY")
+
+    publications = ['maven']
+
+    dryRun = false
+    publish = true
+    override = true
+
+    pkg {
+        repo = 'RxFireDroid'
+        name = 'RxFireDroid'
+        userOrg = 'goddchen2'
+        desc = 'Rx (Version 2!) wrapper for the Firebase Android library'
+        issueTrackerUrl = 'https://github.com/Goddchen/RxFireDroid/issues'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/Goddchen/RxFireDroid.git'
+        websiteUrl = 'https://github.com/Goddchen/RxFireDroid'
+        labels = ['android', 'rxjava', 'rx', 'rxjava2']
+        publicDownloadNumbers = true
+        githubRepo = 'Goddchen/RxFireDroid'
+
+        version {
+            name = '0.1'
+        }
+    }
+}
