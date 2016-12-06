@@ -71,7 +71,7 @@ bintray {
         vcsUrl = 'https://github.com/Goddchen/RxFireDroid.git'
         websiteUrl = 'https://github.com/Goddchen/RxFireDroid'
         labels = ['android', 'rxjava', 'rx', 'rxjava2']
-        publicDownloadNumber = true
+        publicDownloadNumbers = true
         githubRepo = 'Goddchen/RxFireDroid'
 
         version {
