@@ -36,3 +36,9 @@ script:
     - cd library
     - chmod u+x ./gradlew
     - ./gradlew clean assemble test connectedAndroidTest
+
+after_success:
+    - if [ "$TRAVIS_BRANCH" == "release" ]; then
+      cd "$TRAVIS_BUILD_DIR"/library;
+      ./gradlew bintrayUpload;
+      fi
