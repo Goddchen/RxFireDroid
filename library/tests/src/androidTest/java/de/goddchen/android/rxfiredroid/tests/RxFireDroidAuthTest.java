@@ -36,6 +36,9 @@ public class RxFireDroidAuthTest {
 
     @Test
     public void signOutTest() {
+        FirebaseUser signedInUser = RxFireDroidAuth.signIn("goddchen+test@gmail.com", "password")
+                .blockingGet();
+        Assert.assertNotNull(signedInUser);
         RxFireDroidAuth.signOut().blockingAwait();
         FirebaseUser signedInUser3 = RxFireDroidAuth.getCurrentUser().blockingGet();
         Assert.assertNull(signedInUser3);
