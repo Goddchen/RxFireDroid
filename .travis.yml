@@ -14,7 +14,6 @@ android:
 
     # The SDK version used to compile your project
     - android-25
-    - android-24
 
     # Additional components
     - extra-google-google_play_services
@@ -23,12 +22,12 @@ android:
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
-    # - sys-img-armeabi-v7a-android-22
+     - sys-img-armeabi-v7a-android-22
     # - sys-img-x86-android-17
-    - sys-img-armeabi-v7a-google_apis-24
+    #- sys-img-armeabi-v7a-google_apis-24
 
 before_script:
-    - echo no | android create avd --force -n test -t android-24 --abi google_apis/armeabi-v7a
+    - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
