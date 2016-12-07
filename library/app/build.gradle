@@ -77,7 +77,7 @@ bintray {
 
     dryRun = false
     publish = true
-    override = true
+    override = false
 
     pkg {
         repo = 'RxFireDroid'
