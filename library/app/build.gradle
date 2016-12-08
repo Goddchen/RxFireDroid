@@ -44,6 +44,20 @@ publishing {
                     dependencyNode.appendNode('artifactId', dependency.name)
                     dependencyNode.appendNode('version', dependency.version)
                 }
+                asNode().appendNode('name', 'RxFireDroid')
+                asNode().appendNode('description', 'Rx (Version 2!) wrapper for the Firebase Android library')
+                asNode().appendNode('url', 'https://github.com/Goddchen/RxFireDroid')
+                def scmNode = asNode().appendNode('scm')
+                scmNode.appendNode('url', 'https://github.com/Goddchen/RxFireDroid/tree/master')
+                scmNode.appendNode('connection', 'scm:git:git://github.com/Goddchen/RxFireDroid.git')
+                scmNode.appendNode('developerConnection', 'scm:git:git://github.com/Goddchen/RxFireDroid.git')
+                def licenseNode = asNode().appendNode('licenses').appendNode('license')
+                licenseNode.appendNode('name', 'MIT License')
+                licenseNode.appendNode('url', 'http://www.opensource.org/licenses/mit-license.php')
+                def developerNode = asNode().appendNode('developers').appendNode('developer')
+                developerNode.appendNode('id', 'Goddchen')
+                developerNode.appendNode('name', 'Goddchen')
+                developerNode.appendNode('email', 'goddchen@gmail.com')
             }
         }
     }
