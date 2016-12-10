@@ -110,11 +110,11 @@ bintray {
 
         version {
             name = '0.2'
-            mavenCentralSync {
+            /*mavenCentralSync {
                 sync = true
                 user = System.getenv("SONATYPE_USER")
                 password = System.getenv("SONATYPE_PASS")
-            }
+            }*/
         }
     }
 }
