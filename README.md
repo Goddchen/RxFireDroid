@@ -7,7 +7,7 @@ This is the first one that works with the RxJava 2!
 
 ## Usage
     dependencies {
-        compile 'de.goddchen.android:rxfiredroid:0.1'
+        compile 'de.goddchen.android:rxfiredroid:0.2'
     }
     
 ## Samples
@@ -30,6 +30,26 @@ This is the first one that works with the RxJava 2!
         .subscribe(
             firebaseUser -> { /* do something... */},
             throwable -> { /* handle error */});
-            
+### Remote Config
+#### Read
+    RxFireDroidRemoteConfig.getBoolean("awesome-feature")
+        .subscribe(
+            enabled -> { /* enable awesome feature */ },
+            throwable -> { /* Log error */ });
+### Storage
+#### Read
+    RxFireDroidStorage.getFile(ref, outFile)
+        .doOnError(throwable -> { /* Log error */ })
+        .subscribe();
+
+    RxFireDroidStorage.getDownloadUrl(ref)
+        .subscribe(
+            uri -> { /* Handle download url */ },
+            throwable -> { /* Log error */});
+#### Write
+    RxFireDroidStorage.putBytes(ref, bytes)
+        .doOnError(throwable -> { /* Log error */ })
+        .subscribe();
+
 ## License
 MIT

@@ -37,7 +37,7 @@ publishing {
             artifact androidSourcesJar
             artifactId = 'rxfiredroid'
             groupId = 'de.goddchen.android'
-            version = '0.1'
+            version = '0.2'
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')
                 configurations.compile.allDependencies.each { dependency ->
@@ -109,7 +109,7 @@ bintray {
         githubRepo = 'Goddchen/RxFireDroid'
 
         version {
-            name = '0.1'
+            name = '0.2'
             mavenCentralSync {
                 sync = true
                 user = System.getenv("SONATYPE_USER")
