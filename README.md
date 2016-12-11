@@ -1,9 +1,10 @@
 # RxFireDroid
 Rx wrapper for the Firebase Android library. 
 
-This is the first one that works with the RxJava 2!
+This is the first one that works with RxJava 2!
 
 [![Build Status](https://travis-ci.org/Goddchen/RxFireDroid.svg?branch=master)](https://travis-ci.org/Goddchen/RxFireDroid)
+[![Bintray](https://img.shields.io/bintray/v/goddchen2/RxFireDroid/RxFireDroid.svg)](https://bintray.com/goddchen2/RxFireDroid/RxFireDroid)
 
 ## Usage
     repositories {
