@@ -39,7 +39,7 @@ script:
     - ./gradlew clean assemble test connectedAndroidTest
 
 after_success:
-    - if [ "$TRAVIS_BRANCH" -eq "release" && "$TRAVIS_PULL_REQUEST" -ne "false" ]; then
-      cd "$TRAVIS_BUILD_DIR"/library;
+    - if [ "$TRAVIS_BRANCH" = "release" ] && [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+      cd "$TRAVIS_BUILD_DIR"/library || exit;
       ./gradlew bintrayUpload;
       fi
