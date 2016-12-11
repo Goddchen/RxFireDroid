@@ -22,6 +22,8 @@ android {
 dependencies {
     compile 'com.google.firebase:firebase-database:10.0.1'
     compile 'com.google.firebase:firebase-auth:10.0.1'
+    compile 'com.google.firebase:firebase-config:10.0.1'
+    compile 'com.google.firebase:firebase-storage:10.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 }
@@ -35,7 +37,7 @@ publishing {
             artifact androidSourcesJar
             artifactId = 'rxfiredroid'
             groupId = 'de.goddchen.android'
-            version = '0.1'
+            version = '0.2'
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')
                 configurations.compile.allDependencies.each { dependency ->
@@ -44,6 +46,20 @@ publishing {
                     dependencyNode.appendNode('artifactId', dependency.name)
                     dependencyNode.appendNode('version', dependency.version)
                 }
+                asNode().appendNode('name', 'RxFireDroid')
+                asNode().appendNode('description', 'Rx (Version 2!) wrapper for the Firebase Android library')
+                asNode().appendNode('url', 'https://github.com/Goddchen/RxFireDroid')
+                def scmNode = asNode().appendNode('scm')
+                scmNode.appendNode('url', 'https://github.com/Goddchen/RxFireDroid/tree/master')
+                scmNode.appendNode('connection', 'scm:git:git://github.com/Goddchen/RxFireDroid.git')
+                scmNode.appendNode('developerConnection', 'scm:git:git://github.com/Goddchen/RxFireDroid.git')
+                def licenseNode = asNode().appendNode('licenses').appendNode('license')
+                licenseNode.appendNode('name', 'MIT License')
+                licenseNode.appendNode('url', 'http://www.opensource.org/licenses/mit-license.php')
+                def developerNode = asNode().appendNode('developers').appendNode('developer')
+                developerNode.appendNode('id', 'Goddchen')
+                developerNode.appendNode('name', 'Goddchen')
+                developerNode.appendNode('email', 'goddchen@gmail.com')
             }
         }
     }
@@ -93,7 +109,12 @@ bintray {
         githubRepo = 'Goddchen/RxFireDroid'
 
         version {
-            name = '0.1'
+            name = '0.2'
+            /*mavenCentralSync {
+                sync = true
+                user = System.getenv("SONATYPE_USER")
+                password = System.getenv("SONATYPE_PASS")
+            }*/
         }
     }
 }

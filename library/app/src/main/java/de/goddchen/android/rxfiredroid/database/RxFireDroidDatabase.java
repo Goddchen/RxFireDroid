@@ -4,6 +4,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Locale;
@@ -34,11 +35,11 @@ public class RxFireDroidDatabase {
                                 path.substring(1) : path));
     }
 
-    public static Single<DatabaseReference> getRef(String pathFormat, String... args) {
+    public static Single<DatabaseReference> getRef(String pathFormat, Object... args) {
         return getRootRef()
                 .map(databaseReference ->
                         databaseReference.child(
-                                String.format(Locale.US, pathFormat, (Object[]) args)));
+                                String.format(Locale.US, pathFormat, args)));
     }
 
     public static Maybe<String> escapeKey(String key) {
@@ -59,61 +60,131 @@ public class RxFireDroidDatabase {
         }
     }
 
-    public static Single<DataSnapshot> getValues(String ref) {
-        return getRef(ref)
-                .flatMap(databaseReference ->
-                        Single.<DataSnapshot>create(subscriber ->
-                                databaseReference
-                                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if (!subscriber.isDisposed()) {
-                                                    subscriber.onSuccess(dataSnapshot);
-                                                }
-                                            }
+    public static Single<DataSnapshot> getValues(DatabaseReference ref) {
+        return Single.<DataSnapshot>create(emitter ->
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (!emitter.isDisposed()) {
+                            emitter.onSuccess(dataSnapshot);
+                        }
+                    }
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-                                                subscriber.onError(databaseError.toException());
-                                            }
-                                        })))
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        emitter.onError(databaseError.toException());
+                    }
+                }))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static Single<DataSnapshot> getValues(String pathFormat, Object... args) {
+        return getValues(String.format(pathFormat, args));
+    }
+
+    public static Single<DataSnapshot> getValues(String ref) {
+        return getRef(ref)
+                .flatMap(RxFireDroidDatabase::getValues);
+    }
+
+    public static Single<DataSnapshot> getValues(Query query) {
+        return Single.<DataSnapshot>create(emitter ->
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (!emitter.isDisposed()) {
+                            emitter.onSuccess(dataSnapshot);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        emitter.onError(databaseError.toException());
+                    }
+                }))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static Observable<DataSnapshot> observeValues(DatabaseReference ref, boolean receiveInitialValues) {
+        return Observable.<DataSnapshot>create(subscriber -> {
+            boolean[] initial = new boolean[]{true};
+            ValueEventListener valueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (initial[0]) {
+                        initial[0] = false;
+                        if (receiveInitialValues) {
+                            subscriber.onNext(dataSnapshot);
+                        }
+                    } else {
+                        subscriber.onNext(dataSnapshot);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    subscriber.onError(databaseError.toException());
+                }
+            };
+            subscriber.setDisposable(Disposables.fromAction(() ->
+                    ref.removeEventListener(valueEventListener)));
+            ref.addValueEventListener(valueEventListener);
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static Observable<DataSnapshot> observeValues(Query query, boolean receiveInitialValues) {
+        return Observable.<DataSnapshot>create(subscriber -> {
+            boolean[] initial = new boolean[]{true};
+            ValueEventListener valueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (initial[0]) {
+                        initial[0] = false;
+                        if (receiveInitialValues) {
+                            subscriber.onNext(dataSnapshot);
+                        }
+                    } else {
+                        subscriber.onNext(dataSnapshot);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    subscriber.onError(databaseError.toException());
+                }
+            };
+            subscriber.setDisposable(Disposables.fromAction(() ->
+                    query.removeEventListener(valueEventListener)));
+            query.addValueEventListener(valueEventListener);
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static Observable<DataSnapshot> observeValues(Query query) {
+        return observeValues(query, true);
+    }
+
+    public static Observable<DataSnapshot> observeValues(String pathFormat, Object... args) {
+        return observeValues(String.format(pathFormat, args));
     }
 
     public static Observable<DataSnapshot> observeValues(String path) {
         return observeValues(path, true);
     }
 
+    public static Observable<DataSnapshot> observeValues(String pathFormat, boolean receiveInitialValues, Object... args) {
+        return observeValues(String.format(pathFormat, args), receiveInitialValues);
+    }
+
     public static Observable<DataSnapshot> observeValues(String path, boolean receiveInitialValues) {
         return getRef(path)
                 .flatMapObservable(databaseReference ->
-                        Observable.<DataSnapshot>create(subscriber -> {
-                            boolean[] initial = new boolean[]{true};
-                            ValueEventListener valueEventListener = new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (initial[0]) {
-                                        initial[0] = false;
-                                        if (receiveInitialValues) {
-                                            subscriber.onNext(dataSnapshot);
-                                        }
-                                    } else {
-                                        subscriber.onNext(dataSnapshot);
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    subscriber.onError(databaseError.toException());
-                                }
-                            };
-                            subscriber.setDisposable(Disposables.fromAction(() ->
-                                    databaseReference.removeEventListener(valueEventListener)));
-                            databaseReference.addValueEventListener(valueEventListener);
-                        }))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                        observeValues(databaseReference, receiveInitialValues));
     }
 
     public static Completable setValues(Map<String, Object> values) {
@@ -128,6 +199,10 @@ public class RxFireDroidDatabase {
         return Observable.fromArray(paths)
                 .toMap(s -> s, s -> null)
                 .flatMapCompletable(RxFireDroidDatabase::setValues);
+    }
+
+    public static Completable setValue(String pathFormat, Object value, Object... args) {
+        return setValue(String.format(pathFormat, args), value);
     }
 
     public static Completable setValue(String ref, Object value) {
