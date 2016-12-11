@@ -6,8 +6,11 @@ This is the first one that works with the RxJava 2!
 [![Build Status](https://travis-ci.org/Goddchen/RxFireDroid.svg?branch=master)](https://travis-ci.org/Goddchen/RxFireDroid)
 
 ## Usage
+    repositories {
+        jcenter()
+    }
     dependencies {
-        compile 'de.goddchen.android:rxfiredroid:0.2'
+        compile 'de.goddchen.android:rxfiredroid:0.2.1'
     }
     
 ## Samples
