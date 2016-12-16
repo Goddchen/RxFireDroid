@@ -36,11 +36,11 @@ public class RxFireDroidDatabase {
                                 path.substring(1) : path));
     }
 
-    public static Single<DatabaseReference> getRef(String pathFormat, Object... args) {
+    public static Single<DatabaseReference> getRef(String pathFormat, String... args) {
         return getRootRef()
                 .map(databaseReference ->
                         databaseReference.child(
-                                String.format(Locale.US, pathFormat, args)));
+                                String.format(Locale.US, pathFormat, (Object[]) args)));
     }
 
     public static Maybe<String> escapeKey(String key) {
@@ -65,8 +65,8 @@ public class RxFireDroidDatabase {
         return getValues((Query) ref);
     }
 
-    public static Single<DataSnapshot> getValues(String pathFormat, Object... args) {
-        return getValues(String.format(pathFormat, args));
+    public static Single<DataSnapshot> getValues(String pathFormat, String... args) {
+        return getValues(String.format(pathFormat, (Object[]) args));
     }
 
     public static Single<DataSnapshot> getValues(String ref) {
@@ -130,16 +130,16 @@ public class RxFireDroidDatabase {
         return observeValues(query, true);
     }
 
-    public static Observable<DataSnapshot> observeValues(String pathFormat, Object... args) {
-        return observeValues(String.format(pathFormat, args));
+    public static Observable<DataSnapshot> observeValues(String pathFormat, String... args) {
+        return observeValues(String.format(pathFormat, (Object[]) args));
     }
 
     public static Observable<DataSnapshot> observeValues(String path) {
         return observeValues(path, true);
     }
 
-    public static Observable<DataSnapshot> observeValues(String pathFormat, boolean receiveInitialValues, Object... args) {
-        return observeValues(String.format(pathFormat, args), receiveInitialValues);
+    public static Observable<DataSnapshot> observeValues(String pathFormat, boolean receiveInitialValues, String... args) {
+        return observeValues(String.format(pathFormat, (Object[]) args), receiveInitialValues);
     }
 
     public static Observable<DataSnapshot> observeValues(String path, boolean receiveInitialValues) {
@@ -162,8 +162,8 @@ public class RxFireDroidDatabase {
                 .flatMapCompletable(RxFireDroidDatabase::setValues);
     }
 
-    public static Completable setValue(String pathFormat, Object value, Object... args) {
-        return setValue(String.format(pathFormat, args), value);
+    public static Completable setValue(String pathFormat, Object value, String... args) {
+        return setValue(String.format(pathFormat, (Object[]) args), value);
     }
 
     public static Completable setValue(String ref, Object value) {
@@ -172,8 +172,8 @@ public class RxFireDroidDatabase {
                 .flatMapCompletable(RxFireDroidDatabase::setValues);
     }
 
-    public static Observable<ChildEvent> observeChildren(String pathFormat, Object... args) {
-        return observeChildren(String.format(pathFormat, args));
+    public static Observable<ChildEvent> observeChildren(String pathFormat, String... args) {
+        return observeChildren(String.format(pathFormat, (Object[]) args));
     }
 
     public static Observable<ChildEvent> observeChildren(String path) {
